@@ -24,7 +24,7 @@ IoT proof-of-concept combining an ESP32 sketch and a browser-based simulator/log
    # Local dev example
    MONGO_URI=mongodb://localhost:27017
    # MongoDB Atlas example (replace user/pass/host)
-   # MONGO_URI=mongodb+srv://Syf:SyfTT17@smartbag.puxcytl.mongodb.net/?appName=SmartBag
+   # MONGO_URI=
    DB_NAME=smartBag
    DISCOVERY_PORT=4210
    DISCOVERY_TOKEN=SMARTBAG_DISCOVER
