@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Smart Bag — Drag & Drop Simulator</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="layout">
+
+    <!-- LEFT PANE -->
+    <div class="panel">
+        <h2>👜 Smart Bag — IoT Simulator</h2>
+
+        <div id="systemStatusBar" class="status-bar" role="status" aria-live="polite">
+            <div class="status-chip" data-channel="weight">
+                <span class="chip-label">Weight</span>
+                <span class="chip-state" id="chipWeight">Pending</span>
+            </div>
+            <div class="status-chip" data-channel="gps">
+                <span class="chip-label">GPS</span>
+                <span class="chip-state" id="chipGps">Pending</span>
+            </div>
+            <div class="status-chip" data-channel="bluetooth">
+                <span class="chip-label">Bluetooth</span>
+                <span class="chip-state" id="chipBt">Pending</span>
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>📦 Add objects manually</h3>
+
+            <div class="form-block">
+                <label for="itemSelect">Select an item</label>
+                <div class="input-actions">
+                    <select id="itemSelect" class="ui-select">
+                    <option value="">— Choose an object —</option>
+                    <option value="300" data-emoji="📘">Math Book (~300g)</option>
+                    <option value="150" data-emoji="📒">Notebook (~150g)</option>
+                    <option value="80" data-emoji="🧰">Pencil Case (~80g)</option>
+                    <option value="500" data-emoji="🥤">Water Bottle (~500g)</option>
+                    <option value="40" data-emoji="🖊️">Pen (~40g)</option>
+                    <option value="250" data-emoji="📱">Tablet (~250g)</option>
+                    <option value="700" data-emoji="💻">Laptop (~700g)</option>
+                    </select>
+                    <button class="btn btn-primary" onclick="addSelectedItem()">Add</button>
+                </div>
+            </div>
+
+            <div class="form-block">
+                <label for="weightInput">Or enter custom weight</label>
+                <div class="input-actions">
+                    <input type="number" id="weightInput" class="ui-input" placeholder="e.g. 350">
+                    <button class="btn btn-secondary" onclick="addCustomWeight()">Add Weight</button>
+                </div>
+            </div>
+
+            <div id="weightStatus" role="status" aria-live="polite"></div>
+
+            <h4>📋 Items in bag:</h4>
+            <ul id="itemList" aria-live="polite"></ul>
+
+            <p>
+                <b>Total weight:</b>
+                <span id="totalWeight">0</span> g
+                <span id="weightTrend" class="trend trend-neutral" aria-label="Weight trend">↔</span>
+            </p>
+            
+            <div class="button-stack">
+                <button class="btn btn-outline full-width" onclick="setReferenceWeight()">Set as Reference Weight</button>
+                <button class="btn btn-danger full-width" onclick="resetBag()">Reset Bag</button>
+            </div>
+            <p><b>Reference weight:</b> <span id="refWeight">Not set</span></p>
+
+            <div class="preset-block" aria-label="Preset bag scenarios">
+                <span class="preset-label">Quick scenarios</span>
+                <div class="preset-buttons">
+                    <button type="button" class="preset-btn" onclick="applyPreset('school')">School Day</button>
+                    <button type="button" class="preset-btn" onclick="applyPreset('travel')">Travel Mode</button>
+                    <button type="button" class="preset-btn" onclick="applyPreset('light')">Light Commute</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="section" id="gpsSection">
+            <h3>📍 GPS Tracking</h3>
+            <p><b>Latitude:</b> <span id="gpsLat">36.8000</span></p>
+            <p><b>Longitude:</b> <span id="gpsLng">10.1800</span></p>
+            <div class="mini-map-container">
+                <div class="mini-map" id="miniMap">
+                    <div class="mini-map-safe" id="miniMapSafe" aria-hidden="true"></div>
+                    <div class="mini-map-trail" id="miniMapTrail"></div>
+                    <div class="mini-map-dot" id="miniMapDot">📍</div>
+                </div>
+                <div class="mini-map-legend">Live position</div>
+            </div>
+                <div id="gpsAlert" role="status" aria-live="polite"></div>
+            <button id="btnGpsAttack" class="ghost-btn">Simulate GPS Attack</button>
+        </div>
+
+        <div class="section">
+            <h3>📡 Bluetooth Anti-Loss</h3>
+            <p><b>RSSI:</b> <span id="rssiValue">-40</span></p>
+                <div id="btAlert" role="status" aria-live="polite"></div>
+        </div>
+
+        <div class="section">
+            <h3>🚨 Global Alerts</h3>
+            <div id="globalAlert" role="status" aria-live="polite"></div>
+        </div>
+
+        <div class="section">
+            <h3>� Live Trends</h3>
+            <div class="trend-row">
+                <div class="trend-card">
+                    <div class="trend-title">Weight (g)</div>
+                    <div class="sparkline" id="weightSparkline"><span class="sparkline-empty">No data yet</span></div>
+                </div>
+                <div class="trend-card">
+                    <div class="trend-title">RSSI (dBm)</div>
+                    <div class="sparkline" id="rssiSparkline"><span class="sparkline-empty">No data yet</span></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>�📝 Activity Timeline</h3>
+            <ul id="eventLogList" class="event-log" aria-live="polite"></ul>
+        </div>
+
+    </div>
+
+    <!-- RIGHT PANE -->
+    <div class="visual-panel">
+
+        <h3>📚 Available Objects (Drag → Bag)</h3>
+
+        <div class="inventory">
+            <div class="inv-item" draggable="true" data-weight="300" data-label="Math Book" data-emoji="📘" title="Math Book (300 g)" role="button" tabindex="0" aria-label="Math Book, 300 grams">
+                <span class="inv-emoji">📘</span>
+                <div class="inv-meta">
+                    <span class="inv-label">Math Book</span>
+                    <span class="inv-weight">300 g</span>
+                </div>
+                <button type="button" class="inv-action" onclick="addInventoryCardToBag(this.closest('.inv-item'))">Add</button>
+            </div>
+            <div class="inv-item" draggable="true" data-weight="150" data-label="Notebook" data-emoji="📒" title="Notebook (150 g)" role="button" tabindex="0" aria-label="Notebook, 150 grams">
+                <span class="inv-emoji">📒</span>
+                <div class="inv-meta">
+                    <span class="inv-label">Notebook</span>
+                    <span class="inv-weight">150 g</span>
+                </div>
+                <button type="button" class="inv-action" onclick="addInventoryCardToBag(this.closest('.inv-item'))">Add</button>
+            </div>
+            <div class="inv-item" draggable="true" data-weight="80" data-label="Pencil Case" data-emoji="🧰" title="Pencil Case (80 g)" role="button" tabindex="0" aria-label="Pencil Case, 80 grams">
+                <span class="inv-emoji">🧰</span>
+                <div class="inv-meta">
+                    <span class="inv-label">Pencil Case</span>
+                    <span class="inv-weight">80 g</span>
+                </div>
+                <button type="button" class="inv-action" onclick="addInventoryCardToBag(this.closest('.inv-item'))">Add</button>
+            </div>
+            <div class="inv-item" draggable="true" data-weight="500" data-label="Bottle" data-emoji="🥤" title="Water Bottle (500 g)" role="button" tabindex="0" aria-label="Water Bottle, 500 grams">
+                <span class="inv-emoji">🥤</span>
+                <div class="inv-meta">
+                    <span class="inv-label">Water Bottle</span>
+                    <span class="inv-weight">500 g</span>
+                </div>
+                <button type="button" class="inv-action" onclick="addInventoryCardToBag(this.closest('.inv-item'))">Add</button>
+            </div>
+            <div class="inv-item" draggable="true" data-weight="40" data-label="Pen" data-emoji="🖊️" title="Pen (40 g)" role="button" tabindex="0" aria-label="Pen, 40 grams">
+                <span class="inv-emoji">🖊️</span>
+                <div class="inv-meta">
+                    <span class="inv-label">Pen</span>
+                    <span class="inv-weight">40 g</span>
+                </div>
+                <button type="button" class="inv-action" onclick="addInventoryCardToBag(this.closest('.inv-item'))">Add</button>
+            </div>
+            <div class="inv-item" draggable="true" data-weight="250" data-label="Tablet" data-emoji="📱" title="Tablet (250 g)" role="button" tabindex="0" aria-label="Tablet, 250 grams">
+                <span class="inv-emoji">📱</span>
+                <div class="inv-meta">
+                    <span class="inv-label">Tablet</span>
+                    <span class="inv-weight">250 g</span>
+                </div>
+                <button type="button" class="inv-action" onclick="addInventoryCardToBag(this.closest('.inv-item'))">Add</button>
+            </div>
+            <div class="inv-item" draggable="true" data-weight="700" data-label="Laptop" data-emoji="💻" title="Laptop (700 g)" role="button" tabindex="0" aria-label="Laptop, 700 grams">
+                <span class="inv-emoji">💻</span>
+                <div class="inv-meta">
+                    <span class="inv-label">Laptop</span>
+                    <span class="inv-weight">700 g</span>
+                </div>
+                <button type="button" class="inv-action" onclick="addInventoryCardToBag(this.closest('.inv-item'))">Add</button>
+            </div>
+        </div>
+
+        <!-- PHONE UI with Bluetooth Connection -->
+        <div class="phone-connection-section" id="phoneConnectionSection">
+            <div class="phone-ui">
+                <div class="phone-header">
+                    <div class="phone-status-bar">
+                        <span class="time">9:41</span>
+                        <div class="status-icons">
+                            <div class="signal-dots" id="signalDots">
+                                <span></span><span></span><span></span><span></span>
+                            </div>
+                            <span class="bt-icon" id="btIcon">🔵</span>
+                            <span class="battery">🔋</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="phone-content">
+                    <h4 style="margin: 0 0 5px 0; font-size: 12px;">SmartBag</h4>
+                    
+                    <div id="connectionNotification" class="connection-notification" style="display: none;">
+                        📡 Connection Lost!
+                    </div>
+                    
+                    <div class="connection-status" id="connectionStatus">
+                        <span class="status-dot" id="statusDot"></span>
+                        <span id="statusText">Connected</span>
+                    </div>
+                    <div class="rssi-display">
+                        <span>Signal:</span>
+                        <div class="rssi-bars" id="rssiBar"></div>
+                        <span id="rssiNum">-40dBm</span>
+                        <span id="rssiTrend" class="trend trend-neutral" aria-label="Signal trend">↔</span>
+                    </div>
+                    <div class="bt-waves" id="btWaves">
+                        <span class="wave">)</span>
+                        <span class="wave">)</span>
+                        <span class="wave">)</span>
+                    </div>
+                </div>
+
+                <div class="phone-footer">
+                    <small>Bag Weight: <span id="phoneWeightDisplay">0g</span></small>
+                </div>
+            </div>
+
+            <!-- Bluetooth Wave Visualization -->
+            <div class="bt-connection">
+                <span class="phone-icon">📱</span>
+                <div class="waves-container" id="wavesContainer">
+                    <div class="wave-line w1"></div>
+                    <div class="wave-line w2"></div>
+                    <div class="wave-line w3"></div>
+                </div>
+                <span class="bag-icon">🎒</span>
+            </div>
+        </div>
+
+        <h3 style="margin-top: 20px;">🎒 Bag (Drop Items Here)</h3>
+
+    <div id="bag" class="bag" role="region" aria-label="Bag drop zone" aria-dropeffect="move"
+             ondragover="allowDrop(event)"
+             ondragenter="bagDragEnter()"
+             ondragleave="bagDragLeave(event)"
+             ondrop="dropInBag(event)">
+
+            <div class="bag-drop-hint" id="bagDropHint">
+                <span class="hint-icon">⬇️</span>
+                <span class="hint-text">Drag items to load the bag</span>
+            </div>
+
+            <!-- svg bag -->
+            <object id="bagImage" data="bag_closed.svg" type="image/svg+xml" class="bag-img" role="img" aria-label="Smart bag illustration"></object>
+
+            <!-- where items appear -->
+            <div id="bagInner" class="bag-inner"></div>
+
+            <!-- overlay display for reference weight -->
+            <div class="bag-display">
+                <div class="bag-gauge" id="bagGauge" aria-hidden="true"></div>
+                <div class="bag-display-screen">
+                    <div class="bag-weight-text">
+                        <span id="bagDisplayCurrent">0g</span>
+                        <span>/</span>
+                        <span id="bagDisplayText">----</span>
+                    </div>
+                    <div class="bag-weight-scale">
+                        <div class="bag-weight-bar" id="bagWeightBar"></div>
+                    </div>
+                    <div class="bag-display-label">Reference Weight</div>
+                    <div class="bag-weight-detail" id="bagStatusDetail">Set a reference weight to monitor.</div>
+                </div>
+            </div>
+
+            <!-- Alert indicators -->
+            <div class="bag-alerts">
+                <div class="alert-led" id="alertLed"></div>
+                <div class="alert-label">Alert</div>
+                <button class="alert-btn" onclick="silenceAlert()" title="Silence alarm">✓</button>
+            </div>
+        </div>
+
+        <!-- Audio for alert -->
+        <audio id="alertSound" preload="auto">
+            <!-- 440Hz beep, 200ms -->
+            <source src="data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAIlYAACJWAAACABAAZGF0YUQAAAB/f39/f39/f39/f39/f39/f39/f39/f39/f39/f39/f39/f39/f39/f39/f39/f39/f39/f39/f39/f39/f39/f39/f39/f39/f39/f39/f39/f39/f38= " type="audio/wav" />
+        </audio>
+
+        <!-- Trash Zone -->
+        <div id="trash" class="trash"
+             ondragover="allowDrop(event)"
+             ondragenter="trashDragEnter()"
+             ondragleave="trashDragLeave(event)"
+             ondrop="dropInTrash(event)">
+            🗑️
+        </div>
+
+    </div>
+
+</div>
+
+<script src="app.js"></script>
+
+<div id="toastContainer" class="toast-container" aria-live="polite" aria-atomic="true"></div>
+
+</body>
+</html>

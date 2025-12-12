@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 380 450" width="380" height="450">
+  <defs>
+    <linearGradient id="bagGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#2C3E50;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#34495E;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2C3E50;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="strapGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#1A252F;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#2C3E50;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1A252F;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="flapGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#37474F;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2C3E50;stop-opacity:1" />
+    </linearGradient>
+    <radialGradient id="zipperGradient" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#E0E0E0;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#9E9E9E;stop-opacity:1" />
+    </radialGradient>
+  </defs>
+  
+  <!-- Shadow -->
+  <ellipse cx="190" cy="430" rx="140" ry="10" fill="#000" opacity="0.2"/>
+  
+  <!-- Main bag body -->
+  <path d="M 75 140 L 50 395 Q 50 415 65 418 L 315 418 Q 330 415 330 395 L 305 140 Z" 
+        fill="url(#bagGradient)" stroke="#1A252F" stroke-width="2"/>
+  
+  <!-- Left side panel (depth) -->
+  <path d="M 75 140 L 50 395 L 55 398 L 80 145 Z" fill="#1A252F" opacity="0.5"/>
+  
+  <!-- Right side panel (depth) -->
+  <path d="M 305 140 L 330 395 L 325 398 L 300 145 Z" fill="#455A64" opacity="0.3"/>
+  
+  <!-- Top flap (closed) -->
+  <ellipse cx="190" cy="140" rx="115" ry="18" fill="url(#flapGradient)" stroke="#1A252F" stroke-width="1.5"/>
+  <ellipse cx="190" cy="138" rx="115" ry="3" fill="#546E7A" opacity="0.5"/>
+  
+  <!-- Flap cover panel -->
+  <path d="M 70 130 Q 70 105 85 95 L 295 95 Q 310 105 310 130 L 305 140 L 75 140 Z" 
+        fill="#37474F" stroke="#263238" stroke-width="1.5"/>
+  
+  <!-- Flap shadow -->
+  <ellipse cx="190" cy="141" rx="110" ry="15" fill="#000" opacity="0.15"/>
+  
+  <!-- Magnetic closure -->
+  <rect x="172" y="115" width="36" height="18" rx="4" fill="#455A64" stroke="#263238" stroke-width="1.5"/>
+  <rect x="177" y="119" width="26" height="10" rx="2" fill="url(#zipperGradient)"/>
+  <circle cx="190" cy="124" r="2" fill="#616161"/>
+  
+  <!-- Front pocket -->
+  <path d="M 130 210 L 125 320 Q 125 328 132 330 L 248 330 Q 255 328 255 320 L 250 210 Z" 
+        fill="#37474F" stroke="#263238" stroke-width="1.5"/>
+  
+  <!-- Pocket depth shadow -->
+  <path d="M 130 210 L 125 320 L 128 322 L 133 212 Z" fill="#1A252F" opacity="0.4"/>
+  
+  <!-- Pocket zipper -->
+  <line x1="130" y1="210" x2="250" y2="210" stroke="#9E9E9E" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="245" cy="210" r="6" fill="url(#zipperGradient)" stroke="#757575" stroke-width="1"/>
+  <circle cx="245" cy="210" r="3" fill="#616161"/>
+  
+  <!-- Zipper teeth -->
+  <line x1="135" y1="210" x2="240" y2="210" stroke="#757575" stroke-width="1" stroke-dasharray="3,3"/>
+  
+  <!-- Bottom reinforcement -->
+  <ellipse cx="190" cy="418" rx="125" ry="6" fill="#1A252F"/>
+  <ellipse cx="190" cy="416" rx="125" ry="4" fill="#263238" opacity="0.6"/>
+  
+  <!-- Logo/brand patch -->
+  <rect x="170" y="350" width="40" height="25" rx="3" fill="#455A64" stroke="#263238" stroke-width="1"/>
+  <text x="190" y="366" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#CFD8DC" text-anchor="middle">BAG</text>
+  
+  <!-- Handle on top -->
+  <path d="M 155 90 Q 155 75 190 72 Q 225 75 225 90" 
+        fill="none" stroke="#1A252F" stroke-width="12" stroke-linecap="round"/>
+  <path d="M 155 90 Q 155 75 190 72 Q 225 75 225 90" 
+        fill="none" stroke="#37474F" stroke-width="8" stroke-linecap="round"/>
+  
+  <!-- Seam stitching details -->
+  <line x1="75" y1="150" x2="65" y2="230" stroke="#546E7A" stroke-width="0.5" stroke-dasharray="2,4" opacity="0.5"/>
+  <line x1="305" y1="150" x2="315" y2="230" stroke="#263238" stroke-width="0.5" stroke-dasharray="2,4" opacity="0.5"/>
+</svg>
