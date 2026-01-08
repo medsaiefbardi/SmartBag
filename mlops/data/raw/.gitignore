@@ -1,0 +1,5 @@
+# Ignore raw data files (handled by DVC)
+*.xlsx
+
+# DO NOT ignore DVC metadata
+!*.dvc
