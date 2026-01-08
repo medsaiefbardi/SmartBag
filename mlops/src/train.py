@@ -17,11 +17,12 @@ def main():
     # --------------------------------------------------
     DATA_PATH = Path("data/processed/telco_clean.csv")
     MODEL_PATH = Path("model.pkl")
+    MLFLOW_DB = Path("mlflow.db")
 
     # --------------------------------------------------
-    # MLflow configuration (CI-safe)
+    # MLflow configuration (STABLE BACKEND)
     # --------------------------------------------------
-    mlflow.set_tracking_uri("file:./mlruns")
+    mlflow.set_tracking_uri(f"sqlite:///{MLFLOW_DB.resolve()}")
     mlflow.set_experiment("smartbag-tp2-telco")
 
     # --------------------------------------------------
@@ -49,8 +50,8 @@ def main():
     # --------------------------------------------------
     # Model definition
     # --------------------------------------------------
-    n_estimators = 400
-    max_depth = 20
+    n_estimators = 200
+    max_depth = 12
 
     model = RandomForestClassifier(
         n_estimators=n_estimators,
@@ -81,7 +82,7 @@ def main():
         mlflow.log_metric("precision", precision)
         mlflow.log_metric("recall", recall)
 
-        # Log model (MLflow)
+        # Log model
         mlflow.sklearn.log_model(model, name="model")
 
         # Save model artifact for DVC
