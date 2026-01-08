@@ -45,8 +45,10 @@ def main():
         "churn_label",
         "churn_score",
         "churn_reason",
-        "lat_long"
+        "lat_long",
+        "tenure_months"
     ]
+
 
     df = df.drop(columns=[c for c in columns_to_drop if c in df.columns])
 
