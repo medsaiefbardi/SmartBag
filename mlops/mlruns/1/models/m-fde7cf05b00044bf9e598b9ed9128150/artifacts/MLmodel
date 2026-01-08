@@ -1,0 +1,22 @@
+artifact_path: file:///C:/Users/mbardi/Desktop/2526/iot/mlops/mlruns/1/models/m-fde7cf05b00044bf9e598b9ed9128150/artifacts
+flavors:
+  python_function:
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.sklearn
+    model_path: model.pkl
+    predict_fn: predict
+    python_version: 3.11.6
+  sklearn:
+    code: null
+    pickled_model: model.pkl
+    serialization_format: cloudpickle
+    sklearn_version: 1.6.1
+mlflow_version: 3.7.0
+model_id: m-fde7cf05b00044bf9e598b9ed9128150
+model_size_bytes: 177217
+model_uuid: m-fde7cf05b00044bf9e598b9ed9128150
+prompts: null
+run_id: 79fb413042484b17837a9948bc5211fc
+utc_time_created: '2026-01-08 13:58:32.721950'
