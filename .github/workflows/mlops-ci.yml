@@ -1,0 +1,39 @@
+name: SmartBag MLOps CI/CD
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  mlops-pipeline:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Récupérer le code
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. Installer Python
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      # 3. Installer les dépendances MLOps
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r mlops/requirements.txt
+          pip install dvc mlflow
+
+      # 4. Exécuter le pipeline DVC
+      - name: Run DVC pipeline
+        working-directory: mlops
+        run: |
+          dvc repro
+
+      # 5. Vérifier l’artefact généré
+      - name: Check model artifact
+        run: |
+          ls -lh mlops/model.pkl
