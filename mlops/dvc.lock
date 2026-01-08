@@ -1,14 +1,34 @@
 schema: '2.0'
 stages:
+  preprocess:
+    cmd: python src/preprocess.py
+    deps:
+    - path: data/raw/Telco_customer_churn.xlsx
+      hash: md5
+      md5: 8534d3efea2a52104cba8605fef6a7df
+      size: 1368250
+    - path: src/preprocess.py
+      hash: md5
+      md5: d4cc6ad250a40dcb976f6e75b91a5222
+      size: 3151
+    outs:
+    - path: data/processed/telco_clean.csv
+      hash: md5
+      md5: 0eb13641c7753074dfe59868e689729e
+      size: 49055475
   train:
     cmd: python src/train.py
     deps:
+    - path: data/processed/telco_clean.csv
+      hash: md5
+      md5: 0eb13641c7753074dfe59868e689729e
+      size: 49055475
     - path: src/train.py
       hash: md5
-      md5: 8ec8406bd39e389d2f423354dcf6f72f
-      size: 1039
+      md5: e8ff89838a9afca8c43d8a2744514ca0
+      size: 2983
     outs:
     - path: model.pkl
       hash: md5
-      md5: c47c192aa3e4be5cec7aa8512d6bbecb
-      size: 186913
+      md5: 784c596c43ca525b64a9dfb0fca132a1
+      size: 4098729
