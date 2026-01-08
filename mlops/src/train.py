@@ -49,8 +49,8 @@ def main():
     # --------------------------------------------------
     # Model definition
     # --------------------------------------------------
-    n_estimators = 200
-    max_depth = 12
+    n_estimators = 400
+    max_depth = 20
 
     model = RandomForestClassifier(
         n_estimators=n_estimators,
